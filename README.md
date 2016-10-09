@@ -11,8 +11,13 @@ grab it for me.  If you run it in a directory that already contains a
 .gitignore it will abort and tell you to use the `-force` flag to
 overwrite the existing file.
 
-Right now it only supports grabbing the VisualStudio.gitignore but could be
-easily adapted so the particular gitignore filename could be passed in.
+Since 99% of my projects are Visual Studio projects, the script defaults to a "VisualStudio" ignore
+file if you don't provide a type via the `-type` parameter.  If you want a different ignore type, pass
+it via the `-type` parameter:
+
+`Get-GitIgnore -type Node`
+
+Please note that the ignore type is case-sensitive!  Running `Get-GitIgnore -type node` will fail.
 
 ## Get-UTC
 Sometimes you just want an easy way to dump the current time in UTC format.  It

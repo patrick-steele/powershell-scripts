@@ -1,6 +1,14 @@
 function Get-GitIgnore()
 {
-    param([switch] $force)
+    param(
+        [string] $type,
+        [switch] $force
+    )
+
+    if(-not $type)
+    {
+        $type = "VisualStudio"
+    }
 	
 	$dir = (Get-Item -Path ".\" -Verbose).FullName
 	$ignoreFile = "$dir\.gitignore"
@@ -10,7 +18,17 @@ function Get-GitIgnore()
 		return
 	}
 
-	$ignore = ((Invoke-WebRequest -Uri https://github.com/github/gitignore/raw/master/VisualStudio.gitignore).Content)
+    try
+    {
+        $uri = "https://github.com/github/gitignore/raw/master/$type.gitignore"
+	    $ignore = ((Invoke-WebRequest -Uri $uri).Content)
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor Red "Getting gitignore from $uri failed. Check the type ($type) and try again (ignore types are *case-sensitive*!)"
+        exit
+    }
+
 	[System.IO.File]::WriteAllLines($ignoreFile, $ignore)
-	Write-Host ".gitignore created!"
+	Write-Host ".gitignore (type: $type) created!"
 }
